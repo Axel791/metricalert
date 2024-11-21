@@ -1,0 +1,59 @@
+package handlers
+
+import (
+	"github.com/Axel791/metricalert/internal/storage"
+	"net/http"
+	"strconv"
+	"strings"
+)
+
+const (
+	Gauge   = "gauge"
+	Counter = "counter"
+)
+
+type UpdateMetricHandler struct {
+	storage storage.Store
+}
+
+func NewUpdateMetricHandler(storage storage.Store) *UpdateMetricHandler {
+	return &UpdateMetricHandler{storage}
+}
+
+func (h *UpdateMetricHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+	}
+
+	parts := strings.Split(strings.TrimPrefix(r.URL.Path, "/update/"), "/")
+
+	if len(parts) != 3 {
+		http.Error(w, "invalid request path", http.StatusBadRequest)
+	}
+
+	metricType, name, value := parts[0], parts[1], parts[2]
+
+	if name == "" {
+		http.Error(w, "invalid metric name", http.StatusNotFound)
+	}
+
+	switch metricType {
+	case Gauge:
+		v, err := strconv.ParseFloat(value, 64)
+		if err != nil {
+			http.Error(w, "Invalid gauge value", http.StatusBadRequest)
+			return
+		}
+		h.storage.UpdateGauge(name, v)
+	case Counter:
+		v, err := strconv.ParseInt(value, 10, 64)
+		if err != nil {
+			http.Error(w, "Invalid counter value", http.StatusBadRequest)
+			return
+		}
+		h.storage.UpdateCounter(name, v)
+	}
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.Header().Set("Content-Length:", value)
+	w.WriteHeader(http.StatusOK)
+}
