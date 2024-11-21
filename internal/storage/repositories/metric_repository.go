@@ -1,4 +1,4 @@
-package repository
+package repositories
 
 type MetricRepository struct {
 	metrics map[string]interface{}

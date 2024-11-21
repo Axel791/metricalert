@@ -2,14 +2,14 @@ package main
 
 import (
 	"github.com/Axel791/metricalert/internal/handlers"
-	"github.com/Axel791/metricalert/internal/storage/repository"
+	"github.com/Axel791/metricalert/internal/storage/repositories"
 	"net/http"
 )
 
 func main() {
 	mux := http.NewServeMux()
 
-	storage := repository.NewMetricRepository()
+	storage := repositories.NewMetricRepository()
 
 	mux.Handle("/update/", handlers.NewUpdateMetricHandler(storage))
 
