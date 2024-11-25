@@ -23,18 +23,21 @@ func NewUpdateMetricHandler(storage storage.Store) *UpdateMetricHandler {
 func (h *UpdateMetricHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
 	}
 
 	parts := strings.Split(strings.TrimPrefix(r.URL.Path, "/update/"), "/")
 
-	if len(parts) != 3 {
-		http.Error(w, "invalid request path", http.StatusBadRequest)
+	if len(parts) < 3 || len(parts) > 3 {
+		http.Error(w, "invalid request path", http.StatusNotFound)
+		return
 	}
 
 	metricType, name, value := parts[0], parts[1], parts[2]
 
 	if name == "" {
 		http.Error(w, "invalid metric name", http.StatusNotFound)
+		return
 	}
 
 	switch metricType {
@@ -52,7 +55,11 @@ func (h *UpdateMetricHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 			return
 		}
 		h.storage.UpdateCounter(name, v)
+	default:
+		http.Error(w, "invalid metric type", http.StatusBadRequest)
+		return
 	}
+
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.Header().Set("Content-Length:", value)
 	w.WriteHeader(http.StatusOK)
