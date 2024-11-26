@@ -11,7 +11,7 @@ import (
 const (
 	pollInterval   = time.Second * 2
 	reportInterval = time.Second * 10
-	requestUrl     = "http://0.0.0.0"
+	requestURL     = "http://0.0.0.0"
 	requestPort    = 8080
 )
 
@@ -21,7 +21,7 @@ func main() {
 	tickerCollector := time.NewTicker(pollInterval)
 	tickerSender := time.NewTicker(reportInterval)
 
-	metricClient := sender.NewMetricClient(requestUrl, requestPort)
+	metricClient := sender.NewMetricClient(requestURL, requestPort)
 
 	defer tickerCollector.Stop()
 	defer tickerSender.Stop()
