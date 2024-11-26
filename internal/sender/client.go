@@ -64,10 +64,10 @@ func (client *MetricClient) sendMetric(name, metricType string, value interface{
 
 	rsp, err := client.httpClient.Post(u.String(), bytes.NewBuffer(nil), headers)
 
-	defer rsp.Body.Close()
-
 	if err != nil {
 		return errors.Wrap(err, "failed to send metrics")
 	}
+
+	defer rsp.Body.Close()
 	return nil
 }
