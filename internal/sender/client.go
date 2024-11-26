@@ -12,15 +12,15 @@ import (
 
 type MetricClient struct {
 	httpClient *httpclient.Client
-	baseUrl    string
+	baseURL    string
 	port       int64
 }
 
-func NewMetricClient(baseUrl string, port int64) *MetricClient {
+func NewMetricClient(baseURL string, port int64) *MetricClient {
 	client := httpclient.NewClient()
 	return &MetricClient{
 		httpClient: client,
-		baseUrl:    baseUrl,
+		baseURL:    baseURL,
 		port:       port,
 	}
 }
@@ -55,7 +55,7 @@ func (client *MetricClient) sendMetric(name, metricType string, value interface{
 	headers.Set("Content-Type", "text/plain")
 
 	u, err := url.Parse(
-		fmt.Sprintf("%s:%d/update/%s/%s/%v", client.baseUrl, client.port, metricType, name, value),
+		fmt.Sprintf("%s:%d/update/%s/%s/%v", client.baseURL, client.port, metricType, name, value),
 	)
 
 	if err != nil {
