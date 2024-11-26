@@ -1,0 +1,72 @@
+package handlers
+
+import (
+	"net/http"
+	"net/http/httptest"
+	"testing"
+
+	"github.com/Axel791/metricalert/internal/storage/mocks"
+	"github.com/stretchr/testify/require"
+)
+
+func TestUpdateMetricHandler(t *testing.T) {
+	mockStore := new(mocks.MockStore)
+	handler := NewUpdateMetricHandler(mockStore)
+
+	tests := []struct {
+		name           string
+		urlPath        string
+		method         string
+		expectedStatus int
+		mockBehavior   func()
+	}{
+		{
+			name:           "Valid Gauge Update",
+			urlPath:        "/update/gauge/testMetric/123.45",
+			method:         http.MethodPost,
+			expectedStatus: http.StatusOK,
+			mockBehavior: func() {
+				mockStore.On(
+					"UpdateGauge", "testMetric", 123.45).
+					Return(123.45).Once()
+			},
+		},
+		{
+			name:           "Valid Counter Update",
+			urlPath:        "/update/counter/testMetric/10",
+			method:         http.MethodPost,
+			expectedStatus: http.StatusOK,
+			mockBehavior: func() {
+				mockStore.On("UpdateCounter", "testMetric", int64(10)).Return(int64(10)).Once()
+			},
+		},
+		{
+			name:           "Invalid Metric Type",
+			urlPath:        "/update/invalid/testMetric/123",
+			method:         http.MethodPost,
+			expectedStatus: http.StatusBadRequest,
+			mockBehavior:   func() {},
+		},
+		{
+			name:           "Invalid HTTP Method",
+			urlPath:        "/update/gauge/testMetric/123.45",
+			method:         http.MethodGet,
+			expectedStatus: http.StatusMethodNotAllowed,
+			mockBehavior:   func() {},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.mockBehavior()
+
+			req := httptest.NewRequest(tt.method, tt.urlPath, nil)
+			rec := httptest.NewRecorder()
+
+			handler.ServeHTTP(rec, req)
+
+			require.Equal(t, tt.expectedStatus, rec.Code)
+			mockStore.AssertExpectations(t)
+		})
+	}
+}
