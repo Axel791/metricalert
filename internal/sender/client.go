@@ -61,7 +61,10 @@ func (client *MetricClient) sendMetric(name, metricType string, value interface{
 	if err != nil {
 		return errors.Wrap(err, "failed to parse URL")
 	}
-	_, err = client.httpClient.Post(u.String(), bytes.NewBuffer(nil), headers)
+
+	rsp, err := client.httpClient.Post(u.String(), bytes.NewBuffer(nil), headers)
+
+	defer rsp.Body.Close()
 
 	if err != nil {
 		return errors.Wrap(err, "failed to send metrics")
