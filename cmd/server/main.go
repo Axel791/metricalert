@@ -17,9 +17,9 @@ func main() {
 	storage := repositories.NewMetricRepository()
 
 	router.Method(
-		http.MethodPost, "/update/{metricType}/{name}/{value}/", handlers.NewUpdateMetricHandler(storage),
+		http.MethodPost, "/update/{metricType}/{name}/{value}", handlers.NewUpdateMetricHandler(storage),
 	)
-	router.Method(http.MethodGet, "/value/{metricType}/{name}/", handlers.NewGetMetricHandler(storage))
+	router.Method(http.MethodGet, "/value/{metricType}/{name}", handlers.NewGetMetricHandler(storage))
 
 	err := http.ListenAndServe(":8080", router)
 	if err != nil {
