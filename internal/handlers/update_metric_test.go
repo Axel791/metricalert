@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"github.com/go-chi/chi/v5"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -12,6 +13,9 @@ import (
 func TestUpdateMetricHandler(t *testing.T) {
 	mockStore := new(mocks.MockStore)
 	handler := NewUpdateMetricHandler(mockStore)
+
+	router := chi.NewRouter()
+	router.Post("/update/{metricType}/{name}/{value}", handler.ServeHTTP)
 
 	tests := []struct {
 		name           string
@@ -63,7 +67,7 @@ func TestUpdateMetricHandler(t *testing.T) {
 			req := httptest.NewRequest(tt.method, tt.urlPath, nil)
 			rec := httptest.NewRecorder()
 
-			handler.ServeHTTP(rec, req)
+			router.ServeHTTP(rec, req)
 
 			require.Equal(t, tt.expectedStatus, rec.Code)
 			mockStore.AssertExpectations(t)

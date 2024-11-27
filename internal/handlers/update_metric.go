@@ -2,9 +2,9 @@ package handlers
 
 import (
 	"github.com/Axel791/metricalert/internal/storage"
+	"github.com/go-chi/chi/v5"
 	"net/http"
 	"strconv"
-	"strings"
 )
 
 const (
@@ -21,22 +21,12 @@ func NewUpdateMetricHandler(storage storage.Store) *UpdateMetricHandler {
 }
 
 func (h *UpdateMetricHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
+	metricType := chi.URLParam(r, "metricType")
+	name := chi.URLParam(r, "name")
+	value := chi.URLParam(r, "value")
 
-	parts := strings.Split(strings.TrimPrefix(r.URL.Path, "/update/"), "/")
-
-	if len(parts) < 3 || len(parts) > 3 {
-		http.Error(w, "invalid request path", http.StatusNotFound)
-		return
-	}
-
-	metricType, name, value := parts[0], parts[1], parts[2]
-
-	if name == "" {
-		http.Error(w, "invalid metric name", http.StatusNotFound)
+	if metricType == "" || name == "" || value == "" {
+		http.Error(w, "Required parameters are missing", http.StatusNotFound)
 		return
 	}
 

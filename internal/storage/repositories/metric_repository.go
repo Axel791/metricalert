@@ -21,3 +21,8 @@ func (r *MetricRepository) UpdateCounter(name string, value int64) int64 {
 	}
 	return value
 }
+
+func (r *MetricRepository) GetMetric(name string) interface{} {
+	metric := r.metrics[name]
+	return metric
+}
