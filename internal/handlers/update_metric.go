@@ -25,8 +25,8 @@ func (h *UpdateMetricHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 	name := chi.URLParam(r, "name")
 	value := chi.URLParam(r, "value")
 
-	if name == "" {
-		http.Error(w, "invalid metric name", http.StatusNotFound)
+	if metricType == "" || name == "" || value == "" {
+		http.Error(w, "Required parameters are missing", http.StatusNotFound)
 		return
 	}
 
