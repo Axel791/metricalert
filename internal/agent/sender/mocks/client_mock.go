@@ -1,7 +1,7 @@
 package mocks
 
 import (
-	"github.com/Axel791/metricalert/internal/dto"
+	"github.com/Axel791/metricalert/internal/agent/model/dto"
 	"github.com/stretchr/testify/mock"
 )
 

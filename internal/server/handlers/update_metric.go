@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/Axel791/metricalert/internal/storage"
+	"github.com/Axel791/metricalert/internal/server/storage"
 	"github.com/go-chi/chi/v5"
 	"net/http"
 	"strconv"

@@ -1,12 +1,12 @@
 package handlers
 
 import (
+	"github.com/Axel791/metricalert/internal/server/storage/mocks"
 	"github.com/go-chi/chi/v5"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"github.com/Axel791/metricalert/internal/storage/mocks"
 	"github.com/stretchr/testify/require"
 )
 

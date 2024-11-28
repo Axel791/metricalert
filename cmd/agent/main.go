@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/Axel791/metricalert/internal/collector"
-	"github.com/Axel791/metricalert/internal/dto"
-	"github.com/Axel791/metricalert/internal/sender"
+	"github.com/Axel791/metricalert/internal/agent/collector"
+	"github.com/Axel791/metricalert/internal/agent/model/dto"
+	"github.com/Axel791/metricalert/internal/agent/sender"
 	"time"
 )
 
