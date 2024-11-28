@@ -5,6 +5,7 @@ import (
 	"github.com/Axel791/metricalert/internal/server/storage"
 	"github.com/go-chi/chi/v5"
 	"net/http"
+	"strconv"
 )
 
 type GetMetricHandler struct {
@@ -36,14 +37,23 @@ func (h *GetMetricHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "metric not found", http.StatusNotFound)
 		return
 	}
-	valueStr, ok := value.(string)
 
-	if !ok {
-		valueStr = fmt.Sprintf("%v", value)
+	var valueStr string
+
+	switch v := value.(type) {
+	case string:
+		valueStr = v
+	case float64:
+		valueStr = strconv.FormatFloat(v, 'g', -1, 64)
+	case int64:
+		valueStr = fmt.Sprintf("%d", v)
+	default:
+		valueStr = fmt.Sprintf("%v", v)
 	}
+
+	fmt.Println(valueStr)
 
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.Header().Set("Content-Length:", valueStr)
 	w.WriteHeader(http.StatusOK)
-
 }
