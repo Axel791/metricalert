@@ -33,6 +33,10 @@ func (h *GetMetricHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if value == nil {
+		http.Error(w, "metric not found", http.StatusNotFound)
+	}
+
 	valueStr, ok := value.(string)
 	if !ok {
 		valueStr = fmt.Sprintf("%v", value)
