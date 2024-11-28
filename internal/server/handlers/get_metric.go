@@ -26,18 +26,18 @@ func (h *GetMetricHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	var value interface{}
 
-	if metricType == Counter || metricType == Gauge {
-		value = h.storage.GetMetric(name)
-	} else {
+	if metricType != Counter && metricType != Gauge {
 		http.Error(w, "invalid metric type", http.StatusBadRequest)
 		return
 	}
+	value = h.storage.GetMetric(name)
 
 	if value == nil {
 		http.Error(w, "metric not found", http.StatusNotFound)
+		return
 	}
-
 	valueStr, ok := value.(string)
+
 	if !ok {
 		valueStr = fmt.Sprintf("%v", value)
 	}
