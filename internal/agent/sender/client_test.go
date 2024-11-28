@@ -1,8 +1,8 @@
 package sender
 
 import (
-	"github.com/Axel791/metricalert/internal/dto"
-	"github.com/Axel791/metricalert/internal/sender/mocks"
+	"github.com/Axel791/metricalert/internal/agent/model/dto"
+	"github.com/Axel791/metricalert/internal/agent/sender/mocks"
 	"github.com/stretchr/testify/require"
 	"testing"
 )

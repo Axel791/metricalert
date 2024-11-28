@@ -3,7 +3,7 @@ package sender
 import (
 	"bytes"
 	"fmt"
-	"github.com/Axel791/metricalert/internal/dto"
+	"github.com/Axel791/metricalert/internal/agent/model/dto"
 	"github.com/gojek/heimdall/v7/httpclient"
 	"github.com/pkg/errors"
 	"net/http"

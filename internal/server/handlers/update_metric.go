@@ -1,10 +1,11 @@
 package handlers
 
 import (
-	"github.com/Axel791/metricalert/internal/storage"
+	"fmt"
+	"github.com/Axel791/metricalert/internal/server/storage"
+	"github.com/go-chi/chi/v5"
 	"net/http"
 	"strconv"
-	"strings"
 )
 
 const (
@@ -21,39 +22,35 @@ func NewUpdateMetricHandler(storage storage.Store) *UpdateMetricHandler {
 }
 
 func (h *UpdateMetricHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
+	metricType := chi.URLParam(r, "metricType")
+	name := chi.URLParam(r, "name")
+	value := chi.URLParam(r, "value")
 
-	parts := strings.Split(strings.TrimPrefix(r.URL.Path, "/update/"), "/")
+	fmt.Println(metricType, name, value)
 
-	if len(parts) < 3 || len(parts) > 3 {
-		http.Error(w, "invalid request path", http.StatusNotFound)
-		return
-	}
-
-	metricType, name, value := parts[0], parts[1], parts[2]
-
-	if name == "" {
-		http.Error(w, "invalid metric name", http.StatusNotFound)
+	if metricType == "" || name == "" || value == "" {
+		http.Error(w, "Required parameters are missing", http.StatusNotFound)
 		return
 	}
 
 	switch metricType {
 	case Gauge:
+		fmt.Println(Gauge)
 		v, err := strconv.ParseFloat(value, 64)
 		if err != nil {
 			http.Error(w, "Invalid gauge value", http.StatusBadRequest)
 			return
 		}
+		fmt.Println(v)
 		h.storage.UpdateGauge(name, v)
 	case Counter:
+		fmt.Println(Counter)
 		v, err := strconv.ParseInt(value, 10, 64)
 		if err != nil {
 			http.Error(w, "Invalid counter value", http.StatusBadRequest)
 			return
 		}
+		fmt.Println(v)
 		h.storage.UpdateCounter(name, v)
 	default:
 		http.Error(w, "invalid metric type", http.StatusBadRequest)

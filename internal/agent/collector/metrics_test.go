@@ -1,7 +1,7 @@
 package collector
 
 import (
-	"github.com/Axel791/metricalert/internal/collector/mocks"
+	"github.com/Axel791/metricalert/internal/agent/collector/mocks"
 	"github.com/stretchr/testify/require"
 	"testing"
 )
