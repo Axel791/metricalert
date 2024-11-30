@@ -1,27 +1,40 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/Axel791/metricalert/internal/agent/collector"
 	"github.com/Axel791/metricalert/internal/agent/model/dto"
 	"github.com/Axel791/metricalert/internal/agent/sender"
+	"github.com/Axel791/metricalert/internal/shared/validatiors"
 	"time"
 )
 
 const (
-	pollInterval   = time.Second * 2
-	reportInterval = time.Second * 10
-	requestURL     = "http://0.0.0.0"
-	requestPort    = 8080
+	defaultPollInterval   = time.Second * 2
+	defaultReportInterval = time.Second * 10
+	defaultRequestURL     = "http://localhost"
+	defaultRequestPort    = 8080
 )
 
 func main() {
+	address := flag.String("a", fmt.Sprintf("%s:%d", defaultRequestURL, defaultRequestPort), "HTTP server address")
+	reportInterval := flag.Duration("r", defaultReportInterval, "Frequency of sending metrics to the server")
+	pollInterval := flag.Duration("p", defaultPollInterval, "Frequency of collecting metrics from runtime")
+
+	flag.Parse()
+
+	if !validatiors.IsValidAddress(*address) {
+		fmt.Errorf("Invalid address: %s\n", *address)
+		return
+	}
+
 	var metricsDTO dto.Metrics
 
-	tickerCollector := time.NewTicker(pollInterval)
-	tickerSender := time.NewTicker(reportInterval)
+	tickerCollector := time.NewTicker(*pollInterval)
+	tickerSender := time.NewTicker(*reportInterval)
 
-	metricClient := sender.NewMetricClient(requestURL, requestPort)
+	metricClient := sender.NewMetricClient(*address)
 
 	defer tickerCollector.Stop()
 	defer tickerSender.Stop()
@@ -44,7 +57,7 @@ func main() {
 
 			err := metricClient.SendMetrics(metricsDTO)
 			if err != nil {
-				_ = fmt.Errorf("error: %v", err)
+				fmt.Printf("Error sending metrics: %v\n", err)
 			}
 		}
 	}
