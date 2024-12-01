@@ -26,8 +26,6 @@ func (h *UpdateMetricHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 	name := chi.URLParam(r, "name")
 	value := chi.URLParam(r, "value")
 
-	fmt.Println(metricType, name, value)
-
 	if metricType == "" || name == "" || value == "" {
 		http.Error(w, "Required parameters are missing", http.StatusNotFound)
 		return
@@ -41,7 +39,6 @@ func (h *UpdateMetricHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 			http.Error(w, "Invalid gauge value", http.StatusBadRequest)
 			return
 		}
-		fmt.Println(v)
 		h.storage.UpdateGauge(name, v)
 	case Counter:
 		fmt.Println(Counter)
@@ -50,7 +47,6 @@ func (h *UpdateMetricHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 			http.Error(w, "Invalid counter value", http.StatusBadRequest)
 			return
 		}
-		fmt.Println(v)
 		h.storage.UpdateCounter(name, v)
 	default:
 		http.Error(w, "invalid metric type", http.StatusBadRequest)
