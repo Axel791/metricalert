@@ -24,6 +24,8 @@ func main() {
 
 	flag.Parse()
 
+	fmt.Printf("Server address 2: %s\n", *addr)
+
 	if !validatiors.IsValidAddress(*addr, false) {
 		fmt.Printf("invalid address: %s\n", *addr)
 		return
@@ -40,8 +42,8 @@ func main() {
 		http.MethodPost, "/update/{metricType}/{name}/{value}", handlers.NewUpdateMetricHandler(storage),
 	)
 	router.Method(http.MethodGet, "/value/{metricType}/{name}", handlers.NewGetMetricHandler(storage))
-
 	err = http.ListenAndServe(*addr, router)
+	fmt.Printf("Server started: %s\n", *addr)
 	if err != nil {
 		panic(err)
 	}
