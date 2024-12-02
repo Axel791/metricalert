@@ -25,8 +25,8 @@ func main() {
 	flag.Parse()
 
 	fmt.Printf("Server address: %s\n", *address)
-	fmt.Printf("Report interval: %s\n", *address)
-	fmt.Printf("Polling interval: %s\n", *pollInterval)
+	fmt.Printf("Report interval: %d\n", *reportInterval)
+	fmt.Printf("Polling interval: %d\n", *pollInterval)
 
 	if !validatiors.IsValidAddress(*address, true) {
 		fmt.Printf("invalid address: %s\n", *address)
