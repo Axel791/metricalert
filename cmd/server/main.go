@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/Axel791/metricalert/internal/server/config"
 	"github.com/Axel791/metricalert/internal/server/handlers"
 	"github.com/Axel791/metricalert/internal/server/storage/repositories"
 	"github.com/Axel791/metricalert/internal/shared/validatiors"
@@ -12,14 +13,14 @@ import (
 )
 
 func main() {
-	//cfg, err := config.ServerLoadConfig()
-	//if err != nil {
-	//	fmt.Printf("error loading config: %v", err)
-	//}
+	cfg, err := config.ServerLoadConfig()
+	if err != nil {
+		fmt.Printf("error loading config: %v", err)
+	}
 
-	//fmt.Printf("Server address: %s\n", cfg.Address)
+	fmt.Printf("Server address: %s\n", cfg.Address)
 
-	addr := flag.String("a", "localhost:8080", "HTTP server address (default: localhost:8080)")
+	addr := flag.String("a", cfg.Address, "HTTP server address (default: localhost:8080)")
 
 	flag.Parse()
 
@@ -41,7 +42,7 @@ func main() {
 		http.MethodPost, "/update/{metricType}/{name}/{value}", handlers.NewUpdateMetricHandler(storage),
 	)
 	router.Method(http.MethodGet, "/value/{metricType}/{name}", handlers.NewGetMetricHandler(storage))
-	err := http.ListenAndServe(*addr, router)
+	err = http.ListenAndServe(*addr, router)
 	fmt.Printf("Server started: %s\n", *addr)
 	if err != nil {
 		panic(err)

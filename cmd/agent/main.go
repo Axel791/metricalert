@@ -19,20 +19,27 @@ func main() {
 	}
 
 	address := flag.String("a", cfg.Address, "HTTP server address")
-	reportInterval := flag.Duration("r", cfg.ReportInterval, "Frequency of sending metrics to the server")
-	pollInterval := flag.Duration("p", cfg.PollInterval, "Frequency of collecting metrics from runtime")
+	reportInterval := flag.Int("r", int(cfg.ReportInterval.Seconds()), "Frequency of sending metrics to the server (in seconds)")
+	pollInterval := flag.Int("p", int(cfg.PollInterval.Seconds()), "Frequency of collecting metrics from runtime (in seconds)")
 
 	flag.Parse()
+
+	fmt.Printf("Server address: %s\n", *address)
+	fmt.Printf("Report interval: %s\n", *address)
+	fmt.Printf("Polling interval: %s\n", *pollInterval)
 
 	if !validatiors.IsValidAddress(*address, true) {
 		fmt.Printf("invalid address: %s\n", *address)
 		return
 	}
 
+	reportDuration := time.Duration(*reportInterval) * time.Second
+	pollDuration := time.Duration(*pollInterval) * time.Second
+
 	var metricsDTO dto.Metrics
 
-	tickerCollector := time.NewTicker(*pollInterval)
-	tickerSender := time.NewTicker(*reportInterval)
+	tickerCollector := time.NewTicker(reportDuration)
+	tickerSender := time.NewTicker(pollDuration)
 
 	metricClient := sender.NewMetricClient(*address)
 
