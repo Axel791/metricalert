@@ -53,7 +53,12 @@ func (h *GetMetricHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		valueStr = fmt.Sprintf("%v", v)
 	}
 	fmt.Println(valueStr)
+
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	w.Header().Set("Content-Length:", valueStr)
+	w.Header().Set("Content-Length", fmt.Sprintf("%d", len(valueStr)))
 	w.WriteHeader(http.StatusOK)
+	_, err := w.Write([]byte(valueStr))
+	if err != nil {
+		http.Error(w, "invalid metric", http.StatusInternalServerError)
+	}
 }
