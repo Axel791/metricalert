@@ -14,18 +14,18 @@ import (
 func main() {
 	cfg, err := config.AgentLoadConfig()
 	if err != nil {
-		fmt.Printf("error loading config: %v", err)
+		fmt.Printf("error loading config: %v\n", err)
 		return
 	}
 
-	address := flag.String("a", fmt.Sprintf("%s", cfg.Address), "HTTP server address")
+	address := flag.String("a", cfg.Address, "HTTP server address")
 	reportInterval := flag.Duration("r", cfg.ReportInterval, "Frequency of sending metrics to the server")
 	pollInterval := flag.Duration("p", cfg.PollInterval, "Frequency of collecting metrics from runtime")
 
 	flag.Parse()
 
 	if !validatiors.IsValidAddress(*address) {
-		_ = fmt.Errorf("Invalid address: %s\n", *address)
+		fmt.Printf("invalid address: %s\n", *address)
 		return
 	}
 
@@ -57,7 +57,7 @@ func main() {
 
 			err := metricClient.SendMetrics(metricsDTO)
 			if err != nil {
-				fmt.Printf("Error sending metrics: %v\n", err)
+				fmt.Printf("error sending metrics: %v\n", err)
 			}
 		}
 	}
