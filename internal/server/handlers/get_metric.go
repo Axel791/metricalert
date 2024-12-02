@@ -52,10 +52,8 @@ func (h *GetMetricHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	default:
 		valueStr = fmt.Sprintf("%v", v)
 	}
-
 	fmt.Println(valueStr)
-
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	w.Header().Set("Content-Length", valueStr)
+	w.Header().Set("Content-Length:", valueStr)
 	w.WriteHeader(http.StatusOK)
 }

@@ -58,6 +58,6 @@ func (h *UpdateMetricHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 	fmt.Printf(value)
 
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	w.Header().Set("Content-Length", value)
+	w.Header().Set("Content-Length:", value)
 	w.WriteHeader(http.StatusOK)
 }
