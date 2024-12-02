@@ -16,7 +16,7 @@ func ServerLoadConfig() (*Config, error) {
 	viper.SetConfigType("env")
 	viper.AddConfigPath(".")
 
-	viper.SetDefault("ADDRESS", "localhost:8080")
+	viper.SetDefault("ADDRESS", "http://localhost:8080")
 
 	viper.AutomaticEnv()
 
