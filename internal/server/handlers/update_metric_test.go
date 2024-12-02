@@ -1,16 +1,25 @@
 package handlers
 
 import (
-	"github.com/Axel791/metricalert/internal/server/storage/mocks"
-	"github.com/go-chi/chi/v5"
+	"flag"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
+	"github.com/Axel791/metricalert/internal/server/storage/mocks"
+	"github.com/go-chi/chi/v5"
 	"github.com/stretchr/testify/require"
 )
 
 func TestUpdateMetricHandler(t *testing.T) {
+	originalFlagSet := flag.CommandLine
+	defer func() {
+		flag.CommandLine = originalFlagSet
+	}()
+
+	flag.CommandLine = flag.NewFlagSet("test", flag.ContinueOnError)
+	flag.String("a", "localhost:8080", "HTTP server address")
+
 	mockStore := new(mocks.MockStore)
 	handler := NewUpdateMetricHandler(mockStore)
 
