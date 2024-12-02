@@ -24,7 +24,7 @@ func main() {
 
 	flag.Parse()
 
-	if !validatiors.IsValidAddress(*address) {
+	if !validatiors.IsValidAddress(*address, true) {
 		fmt.Printf("invalid address: %s\n", *address)
 		return
 	}

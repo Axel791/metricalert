@@ -16,14 +16,15 @@ func main() {
 	cfg, err := config.ServerLoadConfig()
 	if err != nil {
 		fmt.Printf("error loading config: %v", err)
-		return
 	}
+
+	fmt.Printf("Server address: %s\n", cfg.Address)
 
 	addr := flag.String("a", cfg.Address, "HTTP server address (default: localhost:8080)")
 
 	flag.Parse()
 
-	if !validatiors.IsValidAddress(*addr) {
+	if !validatiors.IsValidAddress(*addr, false) {
 		fmt.Printf("invalid address: %s\n", *addr)
 		return
 	}
