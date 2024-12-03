@@ -20,7 +20,7 @@ func AgentLoadConfig() (*Config, error) {
 	viper.SetConfigType("env")
 	viper.AddConfigPath(".")
 
-	viper.SetDefault("ADDRESS", "http://localhost:8080")
+	viper.SetDefault("ADDRESS", "localhost:8080")
 	viper.SetDefault("REPORT_INTERVAL", 10*time.Second)
 	viper.SetDefault("POLL_INTERVAL", 2*time.Second)
 

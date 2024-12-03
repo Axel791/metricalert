@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/Axel791/metricalert/internal/agent/collector"
@@ -26,7 +27,13 @@ func parseFlags(cfg *config.Config) (string, time.Duration, time.Duration) {
 	)
 
 	flag.Parse()
-	return *address, time.Duration(*reportInterval) * time.Second, time.Duration(*pollInterval) * time.Second
+
+	addr := *address
+	if !strings.HasPrefix(addr, "http://") && !strings.HasPrefix(addr, "https://") {
+		addr = "http://" + addr
+	}
+
+	return addr, time.Duration(*reportInterval) * time.Second, time.Duration(*pollInterval) * time.Second
 }
 
 func runAgent(address string, reportInterval, pollInterval time.Duration) {

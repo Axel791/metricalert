@@ -6,6 +6,7 @@ import (
 	"github.com/Axel791/metricalert/internal/server/config"
 	"github.com/Axel791/metricalert/internal/server/handlers"
 	"github.com/Axel791/metricalert/internal/server/storage/repositories"
+	"github.com/Axel791/metricalert/internal/shared/validatiors"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"net/http"
@@ -25,10 +26,10 @@ func main() {
 
 	addr := parseFlags(cfg)
 
-	//if !validatiors.IsValidAddress(addr, false) {
-	//	fmt.Printf("invalid address: %s\n", addr)
-	//	return
-	//}
+	if !validatiors.IsValidAddress(addr, false) {
+		fmt.Printf("invalid address: %s\n", addr)
+		return
+	}
 
 	router := chi.NewRouter()
 
