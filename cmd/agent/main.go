@@ -17,12 +17,12 @@ func parseFlags(cfg *config.Config) (string, time.Duration, time.Duration) {
 	address := flag.String("a", cfg.Address, "HTTP server address")
 	reportInterval := flag.Int(
 		"r",
-		int(cfg.ReportInterval.Seconds()),
+		int(cfg.ReportInterval),
 		"Frequency of sending metrics to the server (in seconds)",
 	)
 	pollInterval := flag.Int(
 		"p",
-		int(cfg.PollInterval.Seconds()),
+		int(cfg.PollInterval),
 		"Frequency of collecting metrics from runtime (in seconds)",
 	)
 
