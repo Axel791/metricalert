@@ -31,3 +31,8 @@ func (m *MockStore) GetMetric(name string) interface{} {
 	}
 	return 0
 }
+
+func (m *MockStore) GetAllMetrics() map[string]interface{} {
+	args := m.Called()
+	return args.Get(0).(map[string]interface{})
+}

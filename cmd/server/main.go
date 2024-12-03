@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/Axel791/metricalert/internal/server/config"
 	"github.com/Axel791/metricalert/internal/server/handlers"
 	"github.com/Axel791/metricalert/internal/server/storage/repositories"
 	"github.com/Axel791/metricalert/internal/shared/validatiors"
@@ -11,13 +12,22 @@ import (
 	"net/http"
 )
 
-func main() {
-	addr := flag.String("a", "localhost:8080", "HTTP server address (default: localhost:8080)")
-
+func parseFlags(cfg *config.Config) string {
+	addr := flag.String("a", cfg.Address, "HTTP server address")
 	flag.Parse()
+	return *addr
+}
 
-	if !validatiors.IsValidAddress(*addr) {
-		fmt.Printf("invalid address: %s\n", *addr)
+func main() {
+	cfg, err := config.ServerLoadConfig()
+	if err != nil {
+		fmt.Printf("error loading config: %v", err)
+	}
+
+	addr := parseFlags(cfg)
+
+	if !validatiors.IsValidAddress(addr, false) {
+		fmt.Printf("invalid address: %s\n", addr)
 		return
 	}
 
@@ -32,8 +42,9 @@ func main() {
 		http.MethodPost, "/update/{metricType}/{name}/{value}", handlers.NewUpdateMetricHandler(storage),
 	)
 	router.Method(http.MethodGet, "/value/{metricType}/{name}", handlers.NewGetMetricHandler(storage))
+	router.Method(http.MethodGet, "/", handlers.NewGetMetricsHTMLHandler(storage))
 
-	err := http.ListenAndServe(*addr, router)
+	err = http.ListenAndServe(addr, router)
 	if err != nil {
 		panic(err)
 	}
