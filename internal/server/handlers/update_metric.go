@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/Axel791/metricalert/internal/server/storage"
 	"github.com/go-chi/chi/v5"
 	"net/http"
@@ -26,8 +25,6 @@ func (h *UpdateMetricHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 	name := chi.URLParam(r, "name")
 	value := chi.URLParam(r, "value")
 
-	fmt.Printf(metricType, name, value)
-
 	if metricType == "" || name == "" || value == "" {
 		http.Error(w, "Required parameters are missing", http.StatusNotFound)
 		return
@@ -35,7 +32,6 @@ func (h *UpdateMetricHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 
 	switch metricType {
 	case Gauge:
-		fmt.Println(Gauge)
 		v, err := strconv.ParseFloat(value, 64)
 		if err != nil {
 			http.Error(w, "invalid gauge value", http.StatusBadRequest)
@@ -43,7 +39,6 @@ func (h *UpdateMetricHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 		}
 		h.storage.UpdateGauge(name, v)
 	case Counter:
-		fmt.Println(Counter)
 		v, err := strconv.ParseInt(value, 10, 64)
 		if err != nil {
 			http.Error(w, "Invalid counter value", http.StatusBadRequest)
@@ -54,8 +49,6 @@ func (h *UpdateMetricHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 		http.Error(w, "invalid metric type", http.StatusBadRequest)
 		return
 	}
-
-	fmt.Printf(value)
 
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.Header().Set("Content-Length:", value)

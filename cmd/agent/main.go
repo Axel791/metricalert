@@ -63,11 +63,8 @@ func runAgent(address string, reportInterval, pollInterval time.Duration) {
 				Frees:         float64(metric.Frees),
 				GCCPUFraction: metric.GCCPUFraction,
 			}
-			fmt.Println("Собранные метрики:", metricsDTO)
 
 		case <-tickerSender.C:
-			fmt.Println("Отправка метрик:", metricsDTO)
-
 			err := metricClient.SendMetrics(metricsDTO)
 			if err != nil {
 				fmt.Printf("error sending metrics: %v\n", err)
