@@ -26,3 +26,7 @@ func (r *MetricRepository) GetMetric(name string) interface{} {
 	metric := r.metrics[name]
 	return metric
 }
+
+func (r *MetricRepository) GetAllMetrics() map[string]interface{} {
+	return r.metrics
+}

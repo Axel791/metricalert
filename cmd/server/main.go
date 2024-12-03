@@ -42,8 +42,7 @@ func main() {
 		http.MethodPost, "/update/{metricType}/{name}/{value}", handlers.NewUpdateMetricHandler(storage),
 	)
 	router.Method(http.MethodGet, "/value/{metricType}/{name}", handlers.NewGetMetricHandler(storage))
-
-	fmt.Printf("address: %s\n", addr)
+	router.Method(http.MethodGet, "/", handlers.NewGetMetricsHTMLHandler(storage))
 
 	err = http.ListenAndServe(addr, router)
 	if err != nil {
