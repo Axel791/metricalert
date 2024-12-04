@@ -28,9 +28,9 @@ func (h *GetMetricsHTMLHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
         <h1>Список метрик</h1>
         <table border="1">
             <tr>
-                <th>Имя</th>
-                <th>Тип</th>
-                <th>Значение</th>
+                <th>Имя:</th>
+                <th>Тип:</th>
+                <th>Значение:</th>
             </tr>
             {{ range $name, $value := . }}
             <tr>
